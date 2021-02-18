@@ -9,6 +9,13 @@ const esRolValido = async(rol= '') =>{
     }
  }
 
+ const emailExisteUsuarioPorID = async( id ) => {
+    const existeUsuario = await Usuario.findById(id);
+    if ( !existeUsuario ){
+            throw new Error(`El id no existe:${ id }`);
+    }
+ }
+
  const emailExiste = async( correo = '') => {
     const emailExiste = await Usuario.findOne({ correo });
     if (emailExiste){
@@ -18,5 +25,6 @@ const esRolValido = async(rol= '') =>{
 
 
  module.exports = {
-     esRolValido, emailExiste
+     esRolValido, emailExiste,
+     emailExisteUsuarioPorID
  }
