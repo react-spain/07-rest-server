@@ -1,11 +1,46 @@
 const { response } = require('express');
+const bcryptjs = require('bcryptjs');
+const Usuario = require('../models/usuario');
 
 
-const usuariosPost = (req, res = response) => {
-    const { nombre, edad } = req.body;
+
+const usuariosGet = (req= request , res = response) => {
+  const { q,nombre,apikey,page=1,limit=10 } = req.query;
+  res.json({
+      ok:true,
+      msg: 'get API - controlador',
+      q,
+      nombre,
+      apikey,
+      page,
+      limit
+  });
+}  
+
+const usuariosPost = async (req, res = response) => {
+    
+
+    const { nombre, correo, password, rol } = req.body;
+    const usuario = new Usuario({ nombre, correo, password, rol });
+
+    // Verificar si el email existe
+    const existeEmail = await Usuario.findOne({ correo });
+    if ( existeEmail ){
+      return res.status(400).json({
+        msg: 'El correo ya esta registrado'
+      })
+    }
+
+
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync( password, salt );
+
+    // Guardar la BD
+    await usuario.save();
+
     res.json({
-        msg: 'post API - controlador',
-        nombre, edad
+        usuario
     });
   }
 
@@ -19,18 +54,7 @@ const usuariosPut = (req, res = response) => {
     });
   } 
 
-const usuariosGet = (req= request , res = response) => {
-    const { q,nombre,apikey,page=1,limit=10 } = req.query;
-    res.json({
-        ok:true,
-        msg: 'get API - controlador',
-        q,
-        nombre,
-        apikey,
-        page,
-        limit
-    });
-  }  
+
 
 const usuariosPatch = (req, res = response) => {
     res.json({
