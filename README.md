@@ -1,3 +1,3 @@
-# 07-rest-server
+# WebServer + RestServer
 
-reconstruir  los módulos ```npm install```
+Recuerden que deben de ejecutar ```npm install``` para reconstruir los módulos de Node.
