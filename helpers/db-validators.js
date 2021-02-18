@@ -1,4 +1,5 @@
 const Role = require('../models/rol');
+const Usuario = require('../models/usuario');
 
 const esRolValido = async(rol= '') =>{
     
@@ -8,7 +9,14 @@ const esRolValido = async(rol= '') =>{
     }
  }
 
+ const emailExiste = async( correo = '') => {
+    const emailExiste = await Usuario.findOne({ correo });
+    if (emailExiste){
+            throw new Error(`El correo:${ correo } ya esta registrado en la bd`);
+    }
+ }
+
 
  module.exports = {
-     esRolValido
+     esRolValido, emailExiste
  }

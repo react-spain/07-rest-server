@@ -7,13 +7,14 @@ const { usuariosGet,
         usuariosPut, 
         usuariosPatch, 
         usuariosDelete } = require('../controllers/usuarios');
-const { esRolValido } = require('../helpers/db-validators');
+const { esRolValido, emailExiste } = require('../helpers/db-validators');
 const route = Router();
 
 route.post('/',[
         check('nombre', 'El nombre es necesario').not().isEmpty(),
         check('password','El password tiene que ser mas de 6 letras').isLength({ min:6 }),
         check('correo','El correo no es valido').isEmail(),
+        check('correo').custom( emailExiste ),
         // check('rol', 'No es un roll').isIn(['ADMIN_ROLE','USER_ERROR']),
         check('rol').custom( esRolValido ),
         validarCampos
